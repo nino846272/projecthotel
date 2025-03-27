@@ -1,0 +1,221 @@
+.header {
+    padding-bottom: none;
+    padding-top: 40px;
+    height: 10%;
+}
+
+. {
+    color: #7C6A46;
+}
+
+.headerend {
+    background-color: #7C6A46;
+    border: none;
+    outline: none;
+    padding: auto;
+    width: 150px;
+    height: 50px;
+    margin-bottom: 100px;
+    color: white;
+    height: 50%;
+}
+
+.font {
+    font-family: 'Poppins';
+}
+
+.headersecod {
+    height: 50%;
+}
+
+.headerstart {
+    height: 50%;
+}
+
+.image {}
+
+.headerbutton {
+    background-color: #7C6A46;
+    outline: none;
+    border-radius: 20px;
+    border: none;
+    height: 40px;
+    width: 100px;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.form-control {
+    background: transparent;
+    font-weight: bold;
+    border: none;
+    padding: 0;
+}
+
+.form-control:focus {
+    box-shadow: none;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.text-muted {
+    color: #6c757d !important;
+}
+
+.fas {
+    color: #007bff;
+}
+
+.facilities-container {
+    padding: 20px;
+    text-align: center;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.facilities-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.facilities-subtitle {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.facilities-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.facility-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 150px;
+}
+
+.facility-icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
+}
+
+.facility-name {
+    font-size: 1rem;
+    color: #333;
+    text-align: center;
+}
+
+.lr {
+    background-image: url(../public/luxuriosrooms.png);
+    box-shadow: 10px 200px 400px 200px rgba(124, 106, 70, 0.83) inset;
+
+}
+
+.body {
+    background-image: url(../public/bodyimage.png);
+    width: 100.7%;
+    height: 700px;
+}
+
+.container {
+    padding-top: 50px;
+}
+
+.display-4 {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+..un-page {
+    font-family: Arial, sans-serif;
+    color: #333;
+    padding: 20px;
+}
+
+.un-page h1 {
+    color: #0056b3;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.un-page h2 {
+    color: #007bff;
+    font-size: 2rem;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+.un-page p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.un-page .highlight {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-left: 4px solid #007bff;
+    margin-bottom: 20px;
+}
+
+/* Основные стили для текста */
+h1 {
+    color: #0056b3;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+h2 {
+    color: #007bff;
+    font-size: 2rem;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+/* Стили для картинок */
+.img-fluid {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Отступы между картинками в нижней части */
+.row.mt-5 .col-md-3 {
+    margin-bottom: 20px;
+}
+
+.no-resize {
+    resize: vertical;
+}
