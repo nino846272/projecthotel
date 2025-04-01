@@ -4,33 +4,33 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
+    const [user, setUser] = useState({ name: "", email: "", phone: "" });
+    const [isEditing, setIsEditing] = useState(false);
     const navigate = useNavigate();
-    const [user, setUser] = useState(null);
 
     useEffect(() => {
-        // Retrieve user from localStorage when component mounts
-        const storedUser = localStorage.getItem("user");
-        
-        if (storedUser) {
-            // Parse the stored user data
-            const parsedUser = JSON.parse(storedUser);
-            setUser(parsedUser);
-        } else {
-            // If no user is logged in, redirect to login page
-            navigate("/login");
-        }
-    }, [navigate]);
+        const storedUser = JSON.parse(localStorage.getItem("user")) || { 
+            name: "Иван Иванов", 
+            email: "ivan@example.com", 
+            phone: "+1234567890" 
+        };
+        setUser(storedUser);
+    }, []);
+
+    const handleChange = (e) => {
+        setUser({ ...user, [e.target.name]: e.target.value });
+    };
+
+    const handleSave = () => {
+        localStorage.setItem("user", JSON.stringify(user));
+        setIsEditing(false);
+        alert("Данные сохранены!");
+    };
 
     const handleLogout = () => {
-        // Remove user from localStorage and redirect to login
         localStorage.removeItem("user");
         navigate("/login");
     };
-
-    if (!user) {
-        return <div>Загрузка...</div>;
-    }
-
     return (
         <div className="">
             <div className="container">
@@ -47,37 +47,67 @@ export default function Profile() {
                     </nav>
                     <button className="headerbutton" type="button" style={{ fontFamily: 'Poppins, sans-serif', color: 'white' }}>Забронировать</button>
                 </header>
-                
+
                 <div className="container mt-5">
                     <div className="row">
                         <div className="col-md-6 mx-auto">
                             <div className="card shadow">
                                 <div className="card-header bg-light d-flex justify-content-between align-items-center">
                                     <h3>Профиль пользователя</h3>
-                                    <button 
-                                        className="btn btn-danger btn-sm" 
+                                    <button
+                                        className="btn btn-danger btn-sm"
                                         onClick={handleLogout}
                                     >
                                         Выйти
                                     </button>
                                 </div>
-                                <div className="card-body">
+                                <div className="container mt-4">
+                                    <h2>Профиль</h2>
                                     <div className="mb-3">
-                                        <strong>Имя:</strong> {user.name}
+                                        <label className="form-label">Имя</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            name="name"
+                                            value={user.name}
+                                            onChange={handleChange}
+                                            disabled={!isEditing}
+                                        />
                                     </div>
                                     <div className="mb-3">
-                                        <strong>Email:</strong> {user.email}
+                                        <label className="form-label">Email</label>
+                                        <input
+                                            type="email"
+                                            className="form-control"
+                                            name="email"
+                                            value={user.email}
+                                            onChange={handleChange}
+                                            disabled={!isEditing}
+                                        />
                                     </div>
                                     <div className="mb-3">
-                                        <strong>Телефон:</strong> {user.phone}
+                                        <label className="form-label">Телефон</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            name="phone"
+                                            value={user.phone}
+                                            onChange={handleChange}
+                                            disabled={!isEditing}
+                                        />
                                     </div>
+                                    {isEditing ? (
+                                        <button className="btn btn-success" onClick={handleSave}>Сохранить</button>
+                                    ) : (
+                                        <button className="btn btn-primary" onClick={() => setIsEditing(true)}>Редактировать</button>
+                                    )}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
             <footer className="text-light py-4 w-100 mt-5" style={{ backgroundColor: "#8b6f48", width: "100%" }}>
                 <div className="container-fluid">
                     <div className="row justify-content-between">
