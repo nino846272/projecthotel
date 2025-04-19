@@ -11,7 +11,7 @@ export default function Aboutus() {
     }
     return (
         <div>
-            <header className="d-flex justify-content-between align-items-center p-3 shadow mt-5">
+            <header className="d-flex justify-content-between align-items-center p-3 shadow">
                 <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="" />
                 <nav>
                     <ul className="nav" style={{ fontFamily: 'Poppins, sans-serif' }}>
@@ -20,6 +20,8 @@ export default function Aboutus() {
                         <li className="nav-item"><a href="/rooms" className="nav-link text-dark font"><h5><b>Комнаты</b></h5></a></li>
                         <li className="nav-item"><a href="/about" className="nav-link text-dark font"><h5><b>О нас</b></h5></a></li>
                         <li className="nav-item"><a href="/contactus" className="nav-link text-dark font"><h5><b>Контакты</b></h5></a></li>
+                        <li className="nav-item"><a href="/registra" className="nav-link text-dark font"><h5>Регистрация/Вход</h5></a></li>
+                        <li className=""></li> 
                     </ul>
                 </nav>
                 <button className="headerbutton" type="button" style={{ fontFamily: 'Poppins, sans-serif', color: 'white' }}>Бронировать</button>

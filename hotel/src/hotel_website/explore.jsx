@@ -34,6 +34,7 @@ export default function Explore() {
                             <li className="nav-item"><a href="/rooms" className="nav-link text-dark font"><h5><b>Комнаты</b></h5></a></li>
                             <li className="nav-item"><a href="/about" className="nav-link text-dark font"><h5><b>О нас</b></h5></a></li>
                             <li className="nav-item"><a href="/contactus" className="nav-link text-dark font"><h5><b>Контакты</b></h5></a></li>
+                            <li className="nav-item"><a href="/registra" className="nav-link text-dark font"><h5>Регистрация/Вход</h5></a></li>
                         </ul>
                     </nav>
                     <button className="headerbutton" type="button" style={{ fontFamily: 'Poppins, sans-serif', color: 'white' }}>Book Now</button>
