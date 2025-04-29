@@ -12,6 +12,8 @@ import Profile from './hotel_website/profile';
 import Login from './hotel_website/login';
 import Reg from './hotel_website/reg';
 import HostelPage from './hotel_website/hostels';
+import HostelViewPage from './hotel_website/hostels';
+import HostelManagementPage from './hotel_website/hostelredact';
 function App() {
   return (
     <div>
@@ -25,7 +27,8 @@ function App() {
           <Route path='/profile' element={<Profile/>}/>
           <Route path='/login' element={<Login/>}/>
           <Route path='/registra' element={<Reg/>}/>
-          <Route path='/HT' element={<HostelPage/>}/>
+          <Route path='/hostels' element={<HostelViewPage/>}/>
+          <Route path='/hostels/manage' element={<HostelManagementPage/>}/>
         </Routes>
       </BrowserRouter>
     </div>
