@@ -96,7 +96,7 @@ const HostelManagementPage = () => {
       if (editingHostel) {
         // Обновление существующего хостела
         const response = await axios.put(`${apiUrl}/${editingHostel}`, formData);
-        setHostels(hostels.map(hostel => 
+        setHostels(hostels.map(hostel =>
           hostel.id === editingHostel ? response.data : hostel
         ));
       } else {
@@ -121,6 +121,20 @@ const HostelManagementPage = () => {
   return (
     <div>
       {/* Header */}
+      <header className="d-flex justify-content-between align-items-center p-3 shadow">
+        <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="" />
+        <nav>
+          <ul className="nav" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            <li className="nav-item"><a href="/" className="nav-link text-dark font"><h5><b>Домашняя страница</b></h5></a></li>
+            <li className="nav-item"><a href="/explore" className="nav-link font text-dark"><h5><b>Исследовать</b></h5></a></li>
+            <li className="nav-item"><a href="/rooms" className="nav-link text-dark font"><h5><b>Комнаты</b></h5></a></li>
+            <li className="nav-item"><a href="/about" className="nav-link text-dark font"><h5><b>О нас</b></h5></a></li>
+            <li className="nav-item"><a href="/contactus" className="nav-link text-dark font"><h5><b>Контакты</b></h5></a></li>
+            <li className="nav-item"><a href="/registra" className="nav-link text-dark font"><h5><b>Регистрация/Вход</b></h5></a></li>
+          </ul>
+        </nav>
+        <button className="headerbutton" type="button" style={{ fontFamily: 'Poppins, sans-serif', color: 'white' }}>Бронировать</button>
+      </header>
       <header className="bg-dark text-white p-3 shadow d-flex justify-content-between align-items-center">
         <h2 className="m-0">⚙️ Управление хостелами</h2>
         <div>
@@ -281,7 +295,7 @@ const HostelManagementPage = () => {
             )}
           </div>
         </div>
-        
+
         {!loading && hostels.length === 0 && (
           <div className="alert alert-warning text-center mt-3">
             Хостелов пока нет. Добавьте новый хостел с помощью кнопки "Добавить хостел".
