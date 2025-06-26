@@ -7,26 +7,88 @@ export default function Profile() {
     const [user, setUser] = useState({ name: "", email: "", phone: "", password: "" });
     const [isEditing, setIsEditing] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
     useEffect(() => {
-        const storedUser = JSON.parse(localStorage.getItem("user")) || {
-            name: "Иван Иванов",
-            email: "ivan@example.com",
-            phone: "+1234567890",
-            password: "password123"
-        };
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+        if (!storedUser) {
+            // Если пользователь не авторизован, перенаправляем на страницу входа
+            navigate("/login");
+            return;
+        }
         setUser(storedUser);
-    }, []);
+    }, [navigate]);
 
     const handleChange = (e) => {
         setUser({ ...user, [e.target.name]: e.target.value });
+        // Очищаем ошибки при изменении поля
+        if (errors[e.target.name]) {
+            setErrors({ ...errors, [e.target.name]: null });
+        }
     };
 
-    const handleSave = () => {
-        localStorage.setItem("user", JSON.stringify(user));
+    const validate = () => {
+        const newErrors = {};
+        if (!user.name.trim()) newErrors.name = "Имя обязательно";
+        if (!user.email.trim()) newErrors.email = "Email обязателен";
+        else if (!/\S+@\S+\.\S+/.test(user.email)) newErrors.email = "Неверный формат email";
+        if (!user.phone.trim()) newErrors.phone = "Телефон обязателен";
+        if (user.password && user.password.length < 6) newErrors.password = "Пароль должен быть не менее 6 символов";
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handleSave = async () => {
+        if (!validate()) return;
+        
+        setLoading(true);
+        try {
+            // Если у пользователя есть ID, обновляем данные через API
+            if (user.id) {
+                const response = await fetch(`https://67cc190f3395520e6af72555.mockapi.io/users/${user.id}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(user),
+                });
+
+                if (response.ok) {
+                    const updatedUser = await response.json();
+                    localStorage.setItem("user", JSON.stringify(updatedUser));
+                    setUser(updatedUser);
+                    alert("Данные успешно обновлены!");
+                } else {
+                    alert("Ошибка при обновлении данных");
+                }
+            } else {
+                // Если нет ID, просто сохраняем в localStorage
+                localStorage.setItem("user", JSON.stringify(user));
+                alert("Данные сохранены!");
+            }
+            setIsEditing(false);
+        } catch (error) {
+            console.error("Ошибка при сохранении:", error);
+            alert("Ошибка при сохранении данных");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleEdit = () => {
+        setIsEditing(true);
+        setErrors({});
+    };
+
+    const handleCancel = () => {
+        // Восстанавливаем данные из localStorage
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+        setUser(storedUser);
         setIsEditing(false);
-        alert("Данные сохранены!");
+        setErrors({});
     };
 
     const handleLogout = () => {
@@ -40,26 +102,21 @@ export default function Profile() {
 
     return (
         <div>
+            <header className="d-flex justify-content-between align-items-center p-3 shadow" style={{ backgroundColor: '#7C6A46' }}>
+                <a href="/" className="navbar-brand logo-hover">
+                    <img src="/logowhite.png" alt="Logo" height="40" />
+                </a>
+                <ul className="nav" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                    <li className="nav-item"><a href="/" className="nav-link text-white nav-link nav-hover nav-btn">Главная</a></li>
+                    <li className="nav-item"><a href="/bookings" className="nav-link text-white nav-link nav-hover nav-btn">Забронированные</a></li>
+                    <li className="nav-item"><a href="/profile" className="nav-link text-white nav-link nav-hover nav-btn">Профиль</a></li>
+                </ul>
+            </header>
+            
             <div className="container">
-                <header className="d-flex justify-content-between align-items-center p-3 shadow">
-                    <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="" />
-                    <nav>
-                        <ul className="nav" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                            <li className="nav-item"><a href="/" className="nav-link text-dark font"><h5><b>Домашняя страница</b></h5></a></li>
-                            <li className="nav-item"><a href="/explore" className="nav-link font text-dark"><h5><b>Исследовать</b></h5></a></li>
-                            <li className="nav-item"><a href="/rooms" className="nav-link text-dark font"><h5><b>Комнаты</b></h5></a></li>
-                            <li className="nav-item"><a href="/about" className="nav-link text-dark font"><h5><b>О нас</b></h5></a></li>
-                            <li className="nav-item"><a href="/contactus" className="nav-link text-dark font"><h5><b>Контакты</b></h5></a></li>
-                            <li className=""></li>
-                            <li className="nav-item"><a href="/registra" className="nav-link text dark font"><h5>Регистрация/Вход</h5></a></li>
-                        </ul>
-                    </nav>
-                    <button className="headerbutton" type="button" style={{ fontFamily: 'Poppins, sans-serif', color: 'white' }}>Бронировать</button>
-                </header>
-
                 <div className="container mt-5">
                     <div className="row">
-                        <div className="col-md-6 mx-auto">
+                        <div className="col-md-8 mx-auto">
                             <div className="card shadow">
                                 <div className="card-header bg-light d-flex justify-content-between align-items-center">
                                     <h3>Профиль пользователя</h3>
@@ -70,127 +127,119 @@ export default function Profile() {
                                         Выйти
                                     </button>
                                 </div>
-                                <div className="container mt-4 mb-4">
-                                    <h2>Профиль</h2>
+                                <div className="card-body">
+                                    {user.avatar && (
+                                        <div className="text-center mb-4">
+                                            <img 
+                                                src={user.avatar} 
+                                                alt="Аватар" 
+                                                className="rounded-circle"
+                                                style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                                            />
+                                        </div>
+                                    )}
+                                    
                                     <div className="mb-3">
                                         <label className="form-label">Имя</label>
                                         <input
                                             type="text"
-                                            className="form-control"
+                                            className={`form-control ${errors.name ? 'is-invalid' : ''}`}
                                             name="name"
                                             value={user.name}
                                             onChange={handleChange}
                                             disabled={!isEditing}
                                         />
+                                        {errors.name && <div className="invalid-feedback">{errors.name}</div>}
                                     </div>
+                                    
                                     <div className="mb-3">
                                         <label className="form-label">Email</label>
                                         <input
                                             type="email"
-                                            className="form-control"
+                                            className={`form-control ${errors.email ? 'is-invalid' : ''}`}
                                             name="email"
                                             value={user.email}
                                             onChange={handleChange}
                                             disabled={!isEditing}
                                         />
+                                        {errors.email && <div className="invalid-feedback">{errors.email}</div>}
                                     </div>
+                                    
                                     <div className="mb-3">
                                         <label className="form-label">Телефон</label>
                                         <input
                                             type="text"
-                                            className="form-control"
+                                            className={`form-control ${errors.phone ? 'is-invalid' : ''}`}
                                             name="phone"
-                                            value={user.phone}
+                                            value={user.phone || ''}
                                             onChange={handleChange}
                                             disabled={!isEditing}
                                         />
+                                        {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
                                     </div>
-                                    <div className="mb-3">
-                                        <label className="form-label">Пароль</label>
-                                        <div className="input-group">
-                                            <input
-                                                type={showPassword ? "text" : "password"}
-                                                className="form-control"
-                                                name="password"
-                                                value={user.password}
-                                                onChange={handleChange}
-                                                disabled={!isEditing}
-                                            />
-                                            {isEditing && (
-                                                <button
-                                                    className="btn btn-outline-secondary"
-                                                    type="button"
-                                                    onClick={togglePasswordVisibility}
-                                                >
-                                                    {showPassword ? "Скрыть" : "Показать"}
-                                                </button>
-                                            )}
+                                    
+                                    {/* Показываем поле пароля только если пользователь не авторизован через Google */}
+                                    {!user.uid && (
+                                        <div className="mb-3">
+                                            <label className="form-label">Пароль</label>
+                                            <div className="input-group">
+                                                <input
+                                                    type={showPassword ? "text" : "password"}
+                                                    className={`form-control ${errors.password ? 'is-invalid' : ''}`}
+                                                    name="password"
+                                                    value={user.password || ''}
+                                                    onChange={handleChange}
+                                                    disabled={!isEditing}
+                                                    placeholder={isEditing ? "Введите новый пароль или оставьте пустым" : ""}
+                                                />
+                                                {isEditing && (
+                                                    <button
+                                                        className="btn btn-outline-secondary"
+                                                        type="button"
+                                                        onClick={togglePasswordVisibility}
+                                                    >
+                                                        {showPassword ? "Скрыть" : "Показать"}
+                                                    </button>
+                                                )}
+                                            </div>
+                                            {errors.password && <div className="invalid-feedback">{errors.password}</div>}
                                         </div>
-                                    </div>
-                                    {isEditing ? (
-                                        <button className="btn btn-success" onClick={handleSave}>Сохранить</button>
-                                    ) : (
-                                        <button className="btn btn-primary" onClick={() => setIsEditing(true)}>Редактировать</button>
                                     )}
+
+                                    {/* Кнопки управления */}
+                                    <div className="d-flex gap-2 mt-4">
+                                        {!isEditing ? (
+                                            <button
+                                                className="btn btn-primary"
+                                                onClick={handleEdit}
+                                            >
+                                                Редактировать
+                                            </button>
+                                        ) : (
+                                            <>
+                                                <button
+                                                    className="btn btn-success"
+                                                    onClick={handleSave}
+                                                    disabled={loading}
+                                                >
+                                                    {loading ? "Сохранение..." : "Сохранить"}
+                                                </button>
+                                                <button
+                                                    className="btn btn-secondary"
+                                                    onClick={handleCancel}
+                                                    disabled={loading}
+                                                >
+                                                    Отмена
+                                                </button>
+                                            </>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <footer className="text-light py-4 w-100" style={{ backgroundColor: "#8b6f48", width: "100%" }}>
-                <div className="container-fluid">
-                    <div className="row justify-content-between">
-                        <div className="col-lg-4 col-md-6">
-                            <h5 className="fw-bold">Paradise View</h5>
-                            <p>
-                                Обслуживание в отеле Monteleone было исключительным. Не было
-                                ни одной проблемы, которая бы не была решена своевременно и с
-                                удовлетворительным результатом. Команда особенно впечатлила тем, как
-                                персонал отеля предвидел наши потребности.
-                            </p>
-                        </div>
-                        <div className="col-lg-2 col-md-6">
-                            <h6 className="fw-bold">Быстрые ссылки</h6>
-                            <ul className="list-unstyled">
-                                <li><a href="#" className="text-light text-decoration-none">Бронирование номеров</a></li>
-                                <li><a href="#" className="text-light text-decoration-none">Номера</a></li>
-                                <li><a href="#" className="text-light text-decoration-none">Контакты</a></li>
-                                <li><a href="#" className="text-light text-decoration-none">Исследовать</a></li>
-                            </ul>
-                        </div>
-                        <div className="col-lg-2 col-md-6">
-                            <h6 className="fw-bold">Компания</h6>
-                            <ul className="list-unstyled">
-                                <li><a href="#" className="text-light text-decoration-none">Политика конфиденциальности</a></li>
-                                <li><a href="#" className="text-light text-decoration-none">Политика возврата</a></li>
-                                <li><a href="#" className="text-light text-decoration-none">Часто задаваемые вопросы</a></li>
-                                <li><a href="#" className="text-light text-decoration-none">О нас</a></li>
-                            </ul>
-                        </div>
-                        <div className="col-lg-2 col-md-6">
-                            <h6 className="fw-bold">Социальные сети</h6>
-                            <ul className="list-unstyled">
-                                <li><a href="#" className="text-light text-decoration-none">Facebook</a></li>
-                                <li><a href="#" className="text-light text-decoration-none">Twitter</a></li>
-                                <li><a href="#" className="text-light text-decoration-none">Instagram</a></li>
-                                <li><a href="#" className="text-light text-decoration-none">LinkedIn</a></li>
-                            </ul>
-                        </div>
-                        <div className="col-lg-2 col-md-6">
-                            <h6 className="fw-bold">Рассылка</h6>
-                            <p>Подпишитесь на нашу рассылку, чтобы получать актуальные предложения.</p>
-                            <div className="input-group">
-                                <input type="email" className="form-control" placeholder="Введите ваш email" />
-                                <button className="btn btn-light" type="button">Подписаться</button>
-                            </div>
-                        </div>
-                    </div>
-                    <hr />
-                    <div className="text-center mt-3">Paradise View 2023</div>
-                </div>
-            </footer>
         </div>
     );
 }

@@ -14,6 +14,7 @@ import Reg from './hotel_website/reg';
 import HostelPage from './hotel_website/hostels';
 import HostelViewPage from './hotel_website/hostels';
 import HostelManagementPage from './hotel_website/hostelredact';
+import BookedHotels from './hotel_website/BookedHotels';
 function App() {
   return (
     <div>
@@ -29,6 +30,7 @@ function App() {
           <Route path='/registra' element={<Reg/>}/>
           <Route path='/hostels' element={<HostelViewPage/>}/>
           <Route path='/hostels/manage' element={<HostelManagementPage/>}/>
+          <Route path='/bookings ' element={<BookedHotels/>}/>
         </Routes>
       </BrowserRouter>
     </div>
